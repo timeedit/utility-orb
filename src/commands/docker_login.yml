@@ -7,7 +7,8 @@ parameters:
     default: '_json_key_base64'
   PASSWORD:
     type: 'string'
-    description: If password is ignored, default to variable GCLOUD_SERVICE_KEY
+    description: If password is empty string, default to variable GCLOUD_SERVICE_KEY
+    default: ""
   REGISTRY:
     type: 'string'
     default: europe-docker.pkg.dev
