@@ -14,4 +14,5 @@ parameters:
 steps:
   - checkout
   - steps: <<parameters.STEPS_ENVIRONMENT>>
-  - clean-templates
+  - auth_gcp
+  - clean_templates

@@ -4,4 +4,4 @@ description: >
 steps:
   - run:
       name: Clean gcp instance templates
-      command: <<include(scripts/clean-templates)>>
+      command: <<include(scripts/clean_templates)>>
