@@ -1,7 +1,7 @@
 version: 2.1
 
 description: >
-  Utility orb containing commands and jobs that are shared between projects
+  Utility orb containing commands and jobs that are shared between projects.
 # What will your orb allow users to accomplish?
 # Descriptions should be short, simple, and informative.
 
