@@ -1,0 +1,22 @@
+description: >
+  Does a docker login but defaults are set to teartifacts in gcp
+  Authenticates to teartifacts docker login, uses env `GCLOUD_SERVICE_KEY`
+parameters:
+  USERNAME:
+    type: 'string'
+    default: '_json_key_base64'
+  PASSWORD:
+    type: 'string'
+    description: If password is ignored, default to variable GCLOUD_SERVICE_KEY
+  REGISTRY:
+    type: 'string'
+    default: europe-docker.pkg.dev
+
+steps:
+  - run:
+      environment:
+        PARAM_USERNAME: <<parameters.USERNAME>>
+        PARAM_REGISTRY: <<parameters.REGISTRY>>
+        PARAM_PASSWORD: <<parameters.PASSWORD>>
+      name: Hello Greeting
+      command: <<include(scripts/docker_login)>>
