@@ -19,5 +19,5 @@ steps:
         PARAM_USERNAME: <<parameters.USERNAME>>
         PARAM_REGISTRY: <<parameters.REGISTRY>>
         PARAM_PASSWORD: <<parameters.PASSWORD>>
-      name: Hello Greeting
+      name: Docker login
       command: <<include(scripts/docker_login)>>
