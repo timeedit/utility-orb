@@ -3,7 +3,7 @@ description: >
   and removes the oldest
 # What will this job do?
 
-executor: default
+executor: google_sdk_alpine
 
 parameters:
   STEPS_ENVIRONMENT:

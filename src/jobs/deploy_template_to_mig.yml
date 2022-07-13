@@ -1,0 +1,38 @@
+description: >
+  Deploy instance template to MIG
+
+executor: google_sdk_alpine
+
+shell: /bin/bash -euxo pipefail
+
+parameters:
+  STEPS_ENVIRONMENT:
+    type: steps
+    description: >
+      A step exporting variables to BASH_ENV
+  CREATE_INSTANCE_TEMPLATE:
+    type: steps
+    description: |
+      The command to create an instance template in GCP.
+      Start of an example;
+      gcloud compute instance-templates create-with-container $INSTANCE_TEMPLATE_NAME
+  TIMEOUT_S:
+    type: integer
+    default: 1800
+    description: How long to wait in seconds before exiting with error
+  MAX_UNAVAILABLE:
+    type: string
+    default: "50%"
+  MAX_SURGE:
+    type: string
+    default: "50%"
+steps:
+  - checkout
+  - steps: <<parameters.STEPS_ENVIRONMENT>>
+  - auth_gcp
+  - steps: <<parameters.CREATE_INSTANCE_TEMPLATE>>
+  - set_mig_instance_template
+  - start_mig_rolling_update
+  - wait_mig_stable:
+      TIMEOUT_S: <<parameters.TIMEOUT_S>>
+
