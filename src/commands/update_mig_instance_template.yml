@@ -1,5 +1,5 @@
 description: >
-Set Managed instance group, MIG, instance template
+  Set Managed instance group, MIG, instance template
 steps:
   - run:
       name: update MIG instance group
