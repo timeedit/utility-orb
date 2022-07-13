@@ -1,6 +1,0 @@
-description: >
-  Set Managed instance group, MIG, instance template
-steps:
-  - run:
-      name: update MIG instance group
-      command: <<include(scripts/update_mig_instance_template)>>
