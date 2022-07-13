@@ -1,0 +1,38 @@
+description: >
+  Build and publish docker image
+docker:
+  - image: cimg/base:stable
+resource_class: small
+
+shell: /bin/bash -euxo pipefail
+
+parameters:
+  STEPS_ENVIRONMENT:
+    type: steps
+    description: >
+      A step exporting variables to BASH_ENV
+  STEPS_BUILD_PUBLISH_DOCKER:
+    type: steps
+    description: |
+      Build and publish docker command
+      Example: docker buildx build...
+  DOCKER_USERNAME:
+    type: 'string'
+    default: '_json_key_base64'
+  DOCKER_PASSWORD:
+    type: 'string'
+    description: If password is empty string, default to variable GCLOUD_SERVICE_KEY
+    default: ""
+  DOCKER_REGISTRY:
+    type: 'string'
+    default: europe-docker.pkg.dev
+
+steps:
+  - checkout
+  - steps: <<parameters.STEPS_ENVIRONMENT>>
+  - setup_remote_docker
+  - docker_login:
+      USERNAME: <<parameters.DOCKER_USERNAME>>
+      PASSWORD: <<parameters.DOCKER_PASSWORD>>
+      REGISTRY: <<parameters.DOCKER_REGISTRY>>
+  - steps: <<parameters.STEPS_BUILD_PUBLISH_DOCKER>>
