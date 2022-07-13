@@ -1,0 +1,9 @@
+#!/bin/bash
+source $BASH_ENV
+set -u
+gcloud compute instance-groups managed \
+    rolling-action start-update $INSTANCE_GROUP_NAME \
+      --version template=$INSTANCE_TEMPLATE_NAME \
+      --zone ${COMPUTE_ZONE} \
+      --max-unavailable $PARAM_MAX_UNAVAILABLE \
+      --max-surge $PARAM_MAX_SURGE

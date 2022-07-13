@@ -1,0 +1,16 @@
+description: >
+  Start a managed instance group, MIG, rolling update
+parameters:
+  MAX_UNAVAILABLE:
+    type: string
+    default: "50%"
+  MAX_SURGE:
+    type: string
+    default: "50%"
+steps:
+  - run:
+      environment:
+        PARAM_MAX_UNAVAILABLE: <<parameters.MAX_UNAVAILABLE>>
+        PARAM_MAX_SURGE: <<parameters.MAX_SURGE>>
+      name: Start MIG rolling update
+      command: <<include(scripts/start_mig_rolling_update)>>
