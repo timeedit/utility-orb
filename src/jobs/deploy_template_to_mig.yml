@@ -10,7 +10,7 @@ parameters:
     type: steps
     description: >
       A step exporting variables to BASH_ENV
-  CREATE_INSTANCE_TEMPLATE:
+  STEPS_CREATE_INSTANCE_TEMPLATE:
     type: steps
     description: |
       The command to create an instance template in GCP.
@@ -30,7 +30,7 @@ steps:
   - checkout
   - steps: <<parameters.STEPS_ENVIRONMENT>>
   - auth_gcp
-  - steps: <<parameters.CREATE_INSTANCE_TEMPLATE>>
+  - steps: <<parameters.STEPS_CREATE_INSTANCE_TEMPLATE>>
   - set_mig_instance_template
   - start_mig_rolling_update
   - wait_mig_stable:

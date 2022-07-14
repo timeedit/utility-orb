@@ -10,7 +10,9 @@ parameters:
   STEPS_ENVIRONMENT:
     type: steps
     description: >
-      A step exporting variables to BASH_ENV
+      A step exporting variables to BASH_ENV.
+
+      Also add any code here to setup the build like pulling submodules.
   STEPS_BUILD_PUBLISH_DOCKER:
     type: steps
     description: |
