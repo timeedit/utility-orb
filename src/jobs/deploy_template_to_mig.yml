@@ -16,16 +16,31 @@ parameters:
       The command to create an instance template in GCP.
       Start of an example;
       gcloud compute instance-templates create-with-container $INSTANCE_TEMPLATE_NAME
+  URLMAP_SRC:
+    type: string
+    description: |
+      Name of the file in root project folder .urlmap/*.
+      The file contains the data to be exported to gcp.
+    default: ""
+  URLMAP_DST:
+    type: string
+    description: |
+      Name of the urlmap in gcp that will be overwritten with new data.
+      If no argument is provided it will default to the value of URLMAP_SRC.
+    default: ""
   TIMEOUT_S:
     type: integer
     default: 1800
-    description: How long to wait in seconds before exiting with error
+    description: How long to wait in seconds before exiting with error.
   MAX_UNAVAILABLE:
     type: string
     default: "50%"
   MAX_SURGE:
     type: string
     default: "50%"
+environment:
+  PARAM_URLMAP_SRC: <<parameters.URLMAP_SRC>>
+  PARAM_URLMAP_DST: <<parameters.URLMAP_DST>>
 steps:
   - checkout
   - steps: <<parameters.STEPS_ENVIRONMENT>>
@@ -33,6 +48,10 @@ steps:
   - steps: <<parameters.STEPS_CREATE_INSTANCE_TEMPLATE>>
   - set_mig_instance_template
   - start_mig_rolling_update
+  - when:
+      condition: <<parameters.URLMAP_SRC>>
+      steps:
+        - urlmap
   - wait_mig_stable:
       TIMEOUT_S: <<parameters.TIMEOUT_S>>
 

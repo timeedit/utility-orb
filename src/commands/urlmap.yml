@@ -1,0 +1,7 @@
+description: >
+  Deploys an urlmap
+  Uses env variable GCLOUD_SERVICE_KEY, PROJECT_ID, URLMAP_SRC, and URLMAP_DST
+steps:
+  - run:
+      name: Deploy urlmap
+      command: <<include(scripts/urlmap)>>
