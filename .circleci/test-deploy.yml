@@ -9,7 +9,7 @@ filters: &filters
 commands:
   test_generate_get_secret:
     steps:
-      - utility/generate_get_secret
+      - utility/tesafe_get_secrets
       - run:
           name: test get secret
           command: |

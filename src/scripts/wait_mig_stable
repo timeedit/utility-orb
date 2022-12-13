@@ -1,6 +1,0 @@
-#!/bin/bash
-set -u
-source $BASH_ENV
-gcloud compute instance-groups managed wait-until $INSTANCE_GROUP_NAME --stable \
-  --timeout $PARAM_TIMEOUT_S \
-  --zone ${COMPUTE_ZONE}

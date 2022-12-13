@@ -1,7 +1,0 @@
-#!/bin/bash
-source $BASH_ENV
-set -u
-base64 -d - > ${HOME}/gcloud-service-key.json <<< $GCLOUD_SERVICE_KEY
-gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-gcloud --quiet config set project ${PROJECT_ID}
-gcloud --quiet config set compute/zone ${COMPUTE_ZONE}

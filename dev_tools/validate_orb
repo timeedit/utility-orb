@@ -1,3 +1,5 @@
 #!/bin/bash
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+cd $PROJECT_ROOT
 circleci orb pack src > orb.yml
 circleci orb validate orb.yml

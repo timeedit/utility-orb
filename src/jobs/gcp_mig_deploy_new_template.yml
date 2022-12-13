@@ -1,0 +1,87 @@
+description: >
+  Deploy instance template to MIG
+
+executor: google_sdk_alpine
+
+parameters:
+  STEPS_ENVIRONMENT:
+    type: steps
+    description: >
+      Should generate the file $BASH_ENV which
+      other steps will source to get variables
+  STEPS_MIG_CREATE_TEMPLATE:
+    type: steps
+    description: |
+      The command to create an instance template in GCP.
+      Start of an example;
+      gcloud compute instance-templates create-with-container $INSTANCE_TEMPLATE_NAME
+  GCP_COMPUTE_ZONE:
+    type: string
+    description: GCP compute zone name
+    default: "$GCP_COMPUTE_ZONE"
+  GCP_MIG_NAME:
+    type: string
+    default: "$GCP_MIG_NAME"
+    description: Name of the GCP managed instance group
+  GCP_MIG_TEMPLATE_NAME:
+    type: string
+    default: "$GCP_MIG_TEMPLATE_NAME"
+    description: Name of the GCP template to deploy to the instance group
+  GCP_MIG_MAX_SURGE:
+    type: string
+    default: "50%"
+    description: How many extra nodes we can overshoot our limits with when replacing the active
+  GCP_MIG_MAX_UNAVAILABLE:
+    type: string
+    default: "50%"
+    description: How many nodes we can offline and replace among the active
+  GCP_PROJECT_ID:
+    type: string
+    description: GCP project name
+    default: "$GCP_PROJECT_ID"
+  GCP_SERVICE_KEY:
+    type: env_var_name
+    description: The contents of GCP service account key file
+    default: "GCP_SERVICE_KEY"
+  GCP_MIG_TIMEOUT_S:
+    type: integer
+    default: 1800
+    description: How long to wait in seconds before exiting with error.
+  GCP_URLMAP_DST:
+    type: string
+    description: |
+      Name of the urlmap in gcp that will be overwritten with new data.
+      If no argument is provided it will default to the value of GCP_URLMAP_SRC.
+      The value is always stripped to a basename without file_extension
+      e.g. .urlmaps/prod-lb.yml becomes prod-lb
+    default: ""
+  GCP_URLMAP_SRC:
+    type: string
+    description: |
+      A path to a file which contains an urlmap export.
+      Convention should be .urlmaps/*.yml
+steps:
+  - checkout
+  - steps: <<parameters.STEPS_ENVIRONMENT>>
+  - gcp_authenticate:
+      GCP_PROJECT_ID: << parameters.GCP_PROJECT_ID >>
+      GCP_SERVICE_KEY: << parameters.GCP_SERVICE_KEY >>
+  - steps: <<parameters.STEPS_MIG_CREATE_TEMPLATE>>
+  - gcp_mig_set_instance_template:
+      GCP_MIG_NAME: << parameters.GCP_MIG_NAME >>
+      GCP_MIG_TEMPLATE_NAME: << parameters.GCP_MIG_TEMPLATE_NAME >>
+      GCP_COMPUTE_ZONE:
+  - gcp_mig_start_rolling_update:
+      GCP_COMPUTE_ZONE: << parameters.GCP_COMPUTE_ZONE >>
+      GCP_MIG_NAME: << parameters.GCP_MIG_NAME >>
+      GCP_MIG_MAX_SURGE: << parameters.GCP_MIG_MAX_SURGE >>
+      GCP_MIG_MAX_UNAVAILABLE: << parameters.GCP_MIG_MAX_UNAVAILABLE >>
+      GCP_MIG_TEMPLATE_NAME: << parameters.GCP_MIG_TEMPLATE_NAME >>
+  - when:
+      condition: <<parameters.GCP_URLMAP_SRC>>
+      steps:
+        - gcp_lb_set_urlmap:
+            GCP_URLMAP_SRC: << parameters.GCP_URLMAP_SRC >>
+            GCP_URLMAP_DST: << parameters.GCP_URLMAP_DST >>
+  - gcp_mig_wait_until_stable:
+      GCP_MIG_TIMEOUT_S: <<parameters.GCP_MIG_TIMEOUT_S>>

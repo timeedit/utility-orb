@@ -1,0 +1,44 @@
+description: >
+  Treats group of gcp instance templates that matches a pattern as a fifo queue
+  and removes the oldest.
+  Prerequisite: gcloud must be activated
+parameters:
+  GCP_MIG_TEMPLATE_QUEUE_SIZE:
+    type: integer
+    default: 30
+  GCP_MIG_TEMPLATE_SIMPLE_PATTERN:
+    type: string
+    default: "$GCP_TEMPLATE_SIMPLE_PATTERN"
+    description: |
+      A simple pattern string. Anything that matches the pattern is
+      considered part of the fifo queue.
+      Can either be the pattern directly or a variable name which value is the pattern.
+
+steps:
+  - run:
+      name: Clean gcp instance templates
+      command: |
+        source $BASH_ENV
+        set -u
+        QUEUE_SIZE="<< parameters.GCP_MIG_TEMPLATE_QUEUE_SIZE >>"
+        SIMPLE_PATTERN="<< parameters.GCP_MIG_TEMPLATE_SIMPLE_PATTERN >>"
+        : "${QUEUE_SIZE:=30}"
+        : "${QUEUE_SIZE:?ERROR: Missing value}"
+        # Create bash array of templates that are to be pushed out of the fifo queue
+        # Meaning they are the ones to be deleted
+        readarray -t old_templates < \
+          <(gcloud compute instance-templates list \
+              --filter name:$SIMPLE_PATTERN \
+              --format="value(name)" \
+               --sort-by ~CREATION_TIMESTAMP | tail -n +$QUEUE_SIZE)
+
+        # Try delete templates in the array
+        for template_name in "${old_templates[@]}"; do
+          if ERR_MSG="$(gcloud compute instance-templates delete -q  $template_name 2>&1)"; then
+            echo "INFO: $template_name deleted"
+          elif grep "is already being used by" \<<< $ERR_MSG; then
+            echo "INFO: $template_name is in use and will not be deleted"
+          else
+            echo "ERROR: $template_name could not be deleted. $ERR_MSG"
+          fi
+        done

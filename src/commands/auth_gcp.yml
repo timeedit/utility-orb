@@ -1,7 +1,0 @@
-description: >
-  Uses env variable GCLOUD_SERVICE_KEY, PROJECT_ID, and COMPUTE_ZONE
-  to authenticate to gcp in gcloud.
-steps:
-  - run:
-      name: Auth GCP
-      command: <<include(scripts/auth_gcp)>>

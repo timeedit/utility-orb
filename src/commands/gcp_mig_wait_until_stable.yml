@@ -1,0 +1,26 @@
+description: >
+  Wait for Managed instance group, MIG, to stabilize after starting rolling update
+parameters:
+  GCP_MIG_TIMEOUT_S:
+    type: integer
+    default: 1800
+    description: How long to wait in seconds before exiting with error
+  GCP_MIG_NAME:
+    type: string
+    default: "$GCP_MIG_NAME"
+  GCP_COMPUTE_ZONE:
+    type: string
+    default: "$GCP_COMPUTE_ZONE"
+steps:
+  - run:
+      name: Wait for MIG to stabilize
+      command: |
+        set -u
+        source $BASH_ENV
+        COMPUTE_ZONE="<< parameters.GCP_COMPUTE_ZONE >>"
+        GROUP_NAME="<< parameters.GCP_MIG_NAME>>"
+        TIMEOUT_S="<< parameters.GCP_MIG_TIMEOUT_S >>"
+
+        gcloud compute instance-groups managed wait-until $GROUP_NAME --stable \
+          --timeout "$TIMEOUT_S" \
+          --zone "$COMPUTE_ZONE"

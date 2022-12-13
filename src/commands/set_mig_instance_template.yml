@@ -1,7 +1,0 @@
-description: >
-  Set Managed instance group, MIG, instance template.
-  Future vms will use this template, doesnt modify current running vm's
-steps:
-  - run:
-      name: update MIG instance group
-      command: <<include(scripts/set_mig_instance_template)>>

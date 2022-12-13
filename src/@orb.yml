@@ -1,7 +1,9 @@
 version: 2.1
 
-description: >
-  Utility orb containing commands and jobs that are shared between projects
+description: |
+  Utility orb containing commands and jobs that are shared between projects.
+  Most parameters of string type have a default value which is "$VARIABLE".
+  The convention is to set the variable value in a env step because all commands and jobs sources $BASH_ENV, making those variables available then we can use the variables default values. Those parameters of type env_var_name are expected to just have the variable name excluding the "$", meaning "$VARIABLE" is incorrect but "VARIABLE" is correct.
 # What will your orb allow users to accomplish?
 # Descriptions should be short, simple, and informative.
 

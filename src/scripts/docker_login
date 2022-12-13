@@ -1,9 +1,0 @@
-#!/bin/bash
-if [[ -z $PARAM_PASSWORD ]]; then
-    PARAM_PASSWORD="$GCLOUD_SERVICE_KEY"
-fi
-
-docker login \
-    $PARAM_REGISTRY \
-    -u $PARAM_USERNAME \
-    --password-stdin <<< $PARAM_PASSWORD

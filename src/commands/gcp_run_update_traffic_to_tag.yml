@@ -1,0 +1,38 @@
+description: |
+  Activates a tagged revision by moving the traffic to it
+  and removing the tag
+parameters:
+  GCP_RUN_REGION:
+    type: string
+    description: |
+      The region name the cloud run service operates in.
+      Can either be the name directly or a variable name which value is the name.
+    default: "$GCP_RUN_REGION"
+  GCP_RUN_SERVICE_NAME:
+    type: string
+    description: |
+      Name of the cloud run service in GCP.
+      Can either be the name directly or a variable name which value is the name.
+    default: "$GCP_RUN_SERVICE_NAME"
+  GCP_RUN_REVISION_TAG:
+    type: string
+    description: |
+      The name of the tag to be associated with the cloud run revision
+  CIRCLECI_WHEN:
+    type: string
+    description:
+      A circleci when attribute changes when the step is executed.
+    default: on_fail
+steps:
+  - run:
+      name: Remove cloud run tag
+      command: |
+        source $BASH_ENV
+        GCP_RUN_REGION="<< parameters.GCP_RUN_REGION >>"
+        GCP_RUN_SERVICE_NAME="<< parameters.GCP_RUN_SERVICE_NAME >>"
+        GCP_RUN_REVISION_TAG="<< parameters.GCP_RUN_REVISION_TAG >>"
+
+        gcloud run services update-traffic $CLOUD_RUN_SERVICE_NAME \
+            --region=$CLOUD_RUN_REGION \
+            --to-tags=$CLOUD_RUN_TRAFFIC_TAG=100
+      when: on_fail

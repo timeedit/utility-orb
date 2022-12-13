@@ -1,6 +1,0 @@
-#!/bin/bash
-source $BASH_ENV
-set -u
-gcloud compute instance-groups managed set-instance-template $INSTANCE_GROUP_NAME \
-  --template $INSTANCE_TEMPLATE_NAME \
-  --zone ${COMPUTE_ZONE}

@@ -1,0 +1,26 @@
+description: >
+  Activates a service account to gcloud and sets gcp project ID and compute zone
+  for subsequent commands.
+parameters:
+  GCP_PROJECT_ID:
+    type: string
+    description: GCP project name
+    default: "$GCP_PROJECT_ID"
+  GCP_SERVICE_KEY:
+    type: env_var_name
+    description: The contents of GCP service account key file
+    default: "GCP_SERVICE_KEY"
+steps:
+  - run:
+      name: Auth GCP
+      command: |
+        source $BASH_ENV
+        set -u
+        SERVICE_KEY="$<< parameters.GCP_SERVICE_KEY >>"
+        PROJECT_ID="<< parameters.GCP_PROJECT_ID >>"
+        key="$HOME/gcloud_service_key.json"
+
+        cat >  "$key" \<<< "$SERVICE_KEY"
+        gcloud auth activate-service-account --key-file="$key"
+        gcloud --quiet config set project "$PROJECT_ID"
+        rm "$key"

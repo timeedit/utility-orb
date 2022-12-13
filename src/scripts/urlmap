@@ -1,9 +1,0 @@
-#!/bin/bash
-source $BASH_ENV
-set -u
-[[ -z $CIRCLE_WORKING_DIRECTORY ]] && { echo "ERROR: VAR CIRCLE_WORKING_DIRECTORY is empty"; exit 1;}
-[[ -z $PARAM_URLMAP_SRC ]] && { echo "ERROR: PARAM_URLMAP_SRC is empty"; exit 1;}
-
-: ${PARAM_URLMAP_DST:=$PARAM_URLMAP_SRC}
-gcloud compute --project=$PROJECT_ID url-maps import ${PARAM_URLMAP_DST%.yml} \
-    --source=.urlmap/$PARAM_URLMAP_SRC --global --quiet

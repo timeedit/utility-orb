@@ -1,0 +1,34 @@
+description: >
+  Set Managed instance group, MIG, instance template.
+  Future vms will use this template, doesnt modify current running vm's
+parameters:
+  GCP_MIG_NAME:
+    type: string
+    default: "$GCP_MIG_NAME"
+    description: |
+      Name of the GCP managed instance group
+      Can either be the name directly or a variable name which value is the name.
+  GCP_MIG_TEMPLATE_NAME:
+    type: string
+    default: "$GCP_MIG_TEMPLATE_NAME"
+    description: |
+      Name of the GCP template to deploy to the instance group
+      Can either be the name directly or a variable name which value is the name.
+  GCP_COMPUTE_ZONE:
+    type: string
+    default: "$GCP_COMPUTE_ZONE"
+    description: |
+      Which compute zone the GCP mig resides in
+      Can either be the name directly or a variable name which value is the name.
+steps:
+  - run:
+      name: update gcp managed instance group
+      command: |
+        source $BASH_ENV
+        set -u
+        MIG_NAME="<< parameters.GCP_MIG_NAME >>"
+        TEMPLATE_NAME="<< parameters.GCP_MIG_TEMPLATE_NAME >>"
+        COMPUTE_ZONE="<< parameters.GCP_COMPUTE_ZONE >>"
+        gcloud compute instance-groups managed set-instance-template $MIG_NAME \
+          --template $TEMPLATE_NAME \
+          --zone ${COMPUTE_ZONE}

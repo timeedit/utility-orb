@@ -1,7 +1,0 @@
-description: >
-  Treats group of gcp instance templates that matches a pattern as a fifo queue
-  and removes the oldest
-steps:
-  - run:
-      name: Clean gcp instance templates
-      command: <<include(scripts/clean_templates)>>

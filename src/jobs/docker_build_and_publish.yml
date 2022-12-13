@@ -1,13 +1,11 @@
 description: >
   Build and publish docker image
 docker:
-  - image: << parameters.EXECUTOR >>
+  - image: << parameters.EXECUTOR_IMAGE >>
 resource_class: small
 
-shell: /bin/bash -euo pipefail
-
 parameters:
-  EXECUTOR:
+  EXECUTOR_IMAGE:
     type: 'string'
     description: Sets the executor image
     default: 'cimg/base:2023.01-22.04'
@@ -15,7 +13,6 @@ parameters:
     type: steps
     description: >
       A step exporting variables to BASH_ENV.
-
       Also add any code here to setup the build like pulling submodules.
   STEPS_BUILD_PUBLISH_DOCKER:
     type: steps
@@ -26,9 +23,11 @@ parameters:
     type: 'string'
     default: '_json_key_base64'
   DOCKER_PASSWORD:
-    type: 'string'
-    description: If password is empty string, default to variable GCLOUD_SERVICE_KEY
-    default: ""
+    type: env_var_name
+    description: |
+      Defaults to variable $DOCKER_PASSWORD. If its gcp service account key
+      it must be base64 encoded
+    default: "DOCKER_PASSWORD"
   DOCKER_REGISTRY:
     type: 'string'
     default: europe-docker.pkg.dev
@@ -38,7 +37,7 @@ steps:
   - steps: <<parameters.STEPS_ENVIRONMENT>>
   - setup_remote_docker
   - docker_login:
-      USERNAME: <<parameters.DOCKER_USERNAME>>
-      PASSWORD: <<parameters.DOCKER_PASSWORD>>
-      REGISTRY: <<parameters.DOCKER_REGISTRY>>
+      DOCKER_USERNAME: <<parameters.DOCKER_USERNAME>>
+      DOCKER_PASSWORD: <<parameters.DOCKER_PASSWORD>>
+      DOCKER_REGISTRY: <<parameters.DOCKER_REGISTRY>>
   - steps: <<parameters.STEPS_BUILD_PUBLISH_DOCKER>>

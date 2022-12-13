@@ -1,0 +1,37 @@
+description: >
+  Start a managed instance group, MIG, rolling update
+parameters:
+  GCP_COMPUTE_ZONE:
+    type: string
+    default: "$GCP_COMPUTE_ZONE"
+  GCP_MIG_NAME:
+    type: string
+    default: "$GCP_MIG_NAME"
+  GCP_MIG_MAX_SURGE:
+    type: string
+    default: "50%"
+  GCP_MIG_MAX_UNAVAILABLE:
+    type: string
+    default: "50%"
+  GCP_MIG_TEMPLATE_NAME:
+    type: string
+    default: "$GCP_MIG_TEMPLATE_NAME"
+
+steps:
+  - run:
+      name: Start MIG rolling update
+      command: |
+        source $BASH_ENV
+        set -u
+        COMPUTE_ZONE="<< parameters.GCP_COMPUTE_ZONE >>"
+        GROUP_NAME="<< parameters.GCP_MIG_NAME >>"
+        MAX_SURGE="<< parameters.GCP_MIG_MAX_SURGE >>"
+        MAX_UNAVAILABLE="<< parameters.GCP_MIG_MAX_UNAVAILABLE >>"
+        TEMPLATE_NAME="<< parameters.GCP_MIG_TEMPLATE_NAME >>"
+
+        gcloud compute instance-groups managed \
+            rolling-action start-update "$GROUP_NAME" \
+              --version template="$TEMPLATE_NAME" \
+              --zone "$COMPUTE_ZONE" \
+              --max-unavailable "$MAX_UNAVAILABLE" \
+              --max-surge "$MAX_SURGE"

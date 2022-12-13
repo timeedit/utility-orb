@@ -1,23 +1,29 @@
 description: >
-  Does a docker login but defaults are set to teartifacts in gcp
-  Authenticates to teartifacts docker login, uses env `GCLOUD_SERVICE_KEY`
+  Does a docker login with defaults set to teartifacts in gcp
+  Authenticates to teartifacts docker login.
 parameters:
-  USERNAME:
+  DOCKER_USERNAME:
     type: 'string'
     default: '_json_key_base64'
-  PASSWORD:
-    type: 'string'
-    description: If password is empty string, default to variable GCLOUD_SERVICE_KEY
-    default: ""
-  REGISTRY:
+  DOCKER_PASSWORD:
+    type: env_var_name
+    description: |
+      The name of the variable containing the docker password.
+    default: "DOCKER_PASSWORD"
+  DOCKER_REGISTRY:
     type: 'string'
     default: europe-docker.pkg.dev
 
 steps:
   - run:
-      environment:
-        PARAM_USERNAME: <<parameters.USERNAME>>
-        PARAM_REGISTRY: <<parameters.REGISTRY>>
-        PARAM_PASSWORD: <<parameters.PASSWORD>>
       name: Docker login
-      command: <<include(scripts/docker_login)>>
+      command: |
+        USERNAME="<< parameters.DOCKER_USERNAME >>"
+        PASSWORD="$<< parameters.DOCKER_PASSWORD >>"
+        REGISTRY="<< parameters.DOCKER_REGISTRY >>"
+        source $BASH_ENV
+        set -u
+        docker login \
+        "$REGISTRY" \
+        -u "$USERNAME" \
+        --password-stdin \<<< "$PASSWORD"

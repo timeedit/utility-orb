@@ -1,0 +1,32 @@
+description: >
+  Treats group of gcp instance templates that matches a pattern as a fifo queue
+  and removes the oldest
+
+executor: google_sdk_alpine
+
+parameters:
+  STEPS_ENVIRONMENT:
+    type: steps
+  GCP_MIG_TEMPLATE_QUEUE_SIZE:
+    type: integer
+    default: 30
+  GCP_MIG_TEMPLATE_SIMPLE_PATTERN:
+    type: string
+    default: "$GCP_TEMPLATE_SIMPLE_PATTERN"
+  GCP_PROJECT_ID:
+    type: string
+    description: GCP project name
+    default: "$GCP_PROJECT_ID"
+  GCP_SERVICE_KEY:
+    type: env_var_name
+    description: The contents of GCP service account key file
+    default: "GCP_SERVICE_KEY"
+steps:
+  - checkout
+  - steps: <<parameters.STEPS_ENVIRONMENT>>
+  - gcp_authenticate:
+      GCP_PROJECT_ID: << parameters.GCP_PROJECT_ID >>
+      GCP_SERVICE_KEY: << parameters.GCP_SERVICE_KEY >>
+  - gcp_mig_clean_templates:
+      GCP_MIG_TEMPLATE_QUEUE_SIZE: << parameters.GCP_MIG_TEMPLATE_QUEUE_SIZE >>
+      GCP_MIG_TEMPLATE_SIMPLE_PATTERN: << parameters.GCP_MIG_TEMPLATE_SIMPLE_PATTERN >>

@@ -1,0 +1,36 @@
+description: >
+  Deploys an urlmap
+  Uses env variable GCP_SERVICE_KEY, PROJECT_ID, URLMAP_SRC, and URLMAP_DST
+parameters:
+  GCP_SERVICE_KEY:
+    type: env_var_name
+    default: "GCP_SERVICE_KEY"
+  GCP_PROJECT_ID:
+    type: string
+    default: "$GCP_PROJECT_ID"
+  GCP_URLMAP_SRC:
+    type: string
+  GCP_URLMAP_DST:
+    type: string
+    default: ""
+    description: >
+      If the value is empty its defaulted to URL_MAP_SRC.
+      Value is always stripped of of its last file name extension.
+steps:
+  - run:
+      name: Deploy urlmap
+      command: |
+        source $BASH_ENV
+        set -u
+        GCP_SERVICE_KEY="$<< parameters.GCP_SERVICE_KEY >>"
+        PROJECT_ID="<< parameters.GCP_PROJECT_ID >>"
+        URLMAP_SRC="<< parameters.GCP_URLMAP_SRC >>"
+        URLMAP_DST="<< parameters.GCP_URLMAP_DST >>"
+
+        [[ -z $CIRCLE_WORKING_DIRECTORY ]] && { echo "ERROR: VAR CIRCLE_WORKING_DIRECTORY is empty"; exit 1;}
+        [[ -z $URLMAP_SRC ]] && { echo "ERROR: PARAM_URLMAP_SRC is empty"; exit 1;}
+
+        : "${URLMAP_DST:=$URLMAP_SRC}"
+        gcloud compute --project="$PROJECT_ID" \
+            url-maps import "${URLMAP_DST%.*}" \
+            --source=$URLMAP_SRC --global --quiet

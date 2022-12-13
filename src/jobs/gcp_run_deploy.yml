@@ -1,0 +1,74 @@
+description: |
+  Deploy instance template to Cloud Run.
+  A tag is expected if you want
+  to use the other cloud run jobs in this orb.
+
+executor: google_sdk_alpine
+
+parameters:
+  STEPS_ENVIRONMENT:
+    type: steps
+    description: |
+      Should generate the file $BASH_ENV which
+      other steps will source to get variables
+  STEPS_GCP_RUN_CREATE_REVISION:
+    type: steps
+    description: |
+      Create a new cloud run revision, candidate, with a tag but no traffic
+  STEPS_GCP_RUN_TEST_ON_TAG:
+    type: steps
+    description: |
+      Test towards the tagged revision.
+      If tests exit code is 0, then the tagged revision will be activated.
+      If the test fails, then the tag will be removed and we keep serving
+      traffic from current
+  GCP_RUN_SERVICE_NAME:
+    type: string
+    description: |
+      Name of the cloud run service
+    default: "$GCP_RUN_SERVICE_NAME"
+  GCP_RUN_REVISION_SUFFIX:
+    type: string
+    description: |
+      The suffix string to the cloud run revision
+    default: "$GCP_RUN_REVISION_SUFFIX"
+  GCP_RUN_REVISION_TAG:
+    type: string
+    description: |
+      The tag string to the cloud run revision
+    default: "$GCP_RUN_REVISION_TAG"
+  GCP_PROJECT_ID:
+    type: string
+    description: GCP project name
+    default: "$GCP_PROJECT_ID"
+  GCP_SERVICE_KEY:
+    type: env_var_name
+    description: The contents of GCP service account key file
+    default: "GCP_SERVICE_KEY"
+  GCP_RUN_REGION:
+    type: string
+    description: |
+     The region name the cloud run service operates in.
+     Can either be the region directly or a variable name which value is the region.
+    default: "$GCP_RUN_REGION"
+steps:
+  - checkout
+  - steps: <<parameters.STEPS_ENVIRONMENT>>
+  - gcp_authenticate:
+      GCP_PROJECT_ID: << parameters.GCP_PROJECT_ID >>
+      GCP_SERVICE_KEY: << parameters.GCP_SERVICE_KEY >>
+  - steps: << parameters.STEPS_GCP_RUN_CREATE_REVISION >>
+  - gcp_run_tag_revision:
+      GCP_RUN_SERVICE_NAME: << parameters.GCP_RUN_SERVICE_NAME >>
+      GCP_RUN_REVISION_SUFFIX: << parameters.GCP_RUN_REVISION_SUFFIX >>
+      GCP_RUN_REVISION_TAG: << parameters.GCP_RUN_REVISION_TAG >>
+      GCP_RUN_REGION: << parameters.GCP_RUN_REGION >>
+  - steps: << parameters.STEPS_GCP_RUN_TEST_ON_TAG >>
+  - gcp_run_update_traffic_to_tag:
+      GCP_RUN_SERVICE_NAME: << parameters.GCP_RUN_SERVICE_NAME >>
+      GCP_RUN_REVISION_TAG: << parameters.GCP_RUN_REVISION_TAG >>
+      GCP_RUN_REGION: << parameters.GCP_RUN_REGION >>
+  - gcp_run_remove_revision_tag:
+      GCP_RUN_SERVICE_NAME: << parameters.GCP_RUN_SERVICE_NAME >>
+      GCP_RUN_REVISION_TAG: << parameters.GCP_RUN_REVISION_TAG >>
+      GCP_RUN_REGION: << parameters.GCP_RUN_REGION >>
