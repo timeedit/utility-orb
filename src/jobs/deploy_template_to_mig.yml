@@ -3,7 +3,7 @@ description: >
 
 executor: google_sdk_alpine
 
-shell: /bin/bash -euxo pipefail
+shell: /bin/bash -euo pipefail
 
 parameters:
   STEPS_ENVIRONMENT:

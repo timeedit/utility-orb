@@ -4,7 +4,7 @@ docker:
   - image: cimg/base:stable
 resource_class: small
 
-shell: /bin/bash -euxo pipefail
+shell: /bin/bash -euo pipefail
 
 parameters:
   STEPS_ENVIRONMENT:
