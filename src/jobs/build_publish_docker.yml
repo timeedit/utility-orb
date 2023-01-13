@@ -1,12 +1,16 @@
 description: >
   Build and publish docker image
 docker:
-  - image: cimg/base:stable
+  - image: << parameters.EXECUTOR >>
 resource_class: small
 
 shell: /bin/bash -euo pipefail
 
 parameters:
+  EXECUTOR:
+    type: 'string'
+    description: Sets the executor image
+    default: 'cimg/base:stable'
   STEPS_ENVIRONMENT:
     type: steps
     description: >
