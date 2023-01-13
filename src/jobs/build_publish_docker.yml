@@ -10,7 +10,7 @@ parameters:
   EXECUTOR:
     type: 'string'
     description: Sets the executor image
-    default: 'cimg/base:stable'
+    default: 'cimg/base:2023.01-22.04'
   STEPS_ENVIRONMENT:
     type: steps
     description: >
