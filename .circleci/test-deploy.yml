@@ -6,6 +6,36 @@ orbs:
 filters: &filters
   tags:
     only: /.*/
+commands:
+  test_generate_get_secret:
+    steps:
+      - utility/generate_get_secret
+      - run:
+          name: test get secret
+          command: |
+            export TE_SAFE_TOKEN=my_dummy
+            export TE_SAFE_CONTEXT=dummy
+            username="$(/tmp/get_secret /username)"
+            if [[ $username == my_username ]]; then
+              echo success
+            else
+              echo Failure
+              exit 1
+            fi
+      - run:
+          name: test get secret esc
+          command: |
+            export TE_SAFE_TOKEN=my_dummy
+            export TE_SAFE_CONTEXT=dummy
+            username="$(/tmp/get_secret_esc /username)"
+            if [[ $username == my_username ]]; then
+              echo success
+            else
+              echo Failure
+              exit 1
+            fi
+
+
 
 jobs:
   # Create a job to test the commands of your orbs.
@@ -15,8 +45,7 @@ jobs:
       - image: cimg/base:current
     steps:
       - checkout
-      # Run your orb's commands to validate them.
-      #      - utility/greet
+      - test_generate_get_secret
 workflows:
   test-deploy:
     jobs:
