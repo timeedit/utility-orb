@@ -31,7 +31,7 @@ steps:
         GCP_RUN_REVISION_TAG="<< parameters.GCP_RUN_REVISION_TAG >>"
         GCP_RUN_REGION="<< parameters.GCP_RUN_REGION >>"
 
-        gcloud run services update-traffic $CLOUD_RUN_SERVICE_NAME \
+        gcloud run services update-traffic $GCP_RUN_SERVICE_NAME \
             --region=$GCP_RUN_REGION \
             --remove-tags=$GCP_RUN_REVISION_TAG
       when: << parameters.CIRCLECI_WHEN >>

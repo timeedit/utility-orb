@@ -31,6 +31,6 @@ steps:
         GCP_RUN_REVISION_SUFFIX="<< parameters.GCP_RUN_REVISION_SUFFIX >>"
         GCP_RUN_REVISION_TAG="<< parameters.GCP_RUN_REVISION_TAG >>"
 
-        gcloud run services update-traffic $CLOUD_RUN_SERVICE_NAME \
-        --region="$CLOUD_RUN_REGION" \
+        gcloud run services update-traffic $GCP_RUN_SERVICE_NAME \
+        --region="$GCP_RUN_REGION" \
         --set-tags "$GCP_RUN_REVISION_TAG=$GCP_RUN_SERVICE_NAME-$GCP_RUN_REVISION_SUFFIX"

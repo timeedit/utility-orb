@@ -32,7 +32,7 @@ steps:
         GCP_RUN_SERVICE_NAME="<< parameters.GCP_RUN_SERVICE_NAME >>"
         GCP_RUN_REVISION_TAG="<< parameters.GCP_RUN_REVISION_TAG >>"
 
-        gcloud run services update-traffic $CLOUD_RUN_SERVICE_NAME \
-            --region=$CLOUD_RUN_REGION \
-            --to-tags=$CLOUD_RUN_TRAFFIC_TAG=100
+        gcloud run services update-traffic $GCP_RUN_SERVICE_NAME \
+            --region=$GCP_RUN_REGION \
+            --to-tags=$GCP_RUN_REVISION_TAG=100
       when: on_fail
