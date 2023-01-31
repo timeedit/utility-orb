@@ -18,14 +18,9 @@ parameters:
     type: string
     description: |
       The name of the tag to be associated with the cloud run revision
-  CIRCLECI_WHEN:
-    type: string
-    description:
-      A circleci when attribute changes when the step is executed.
-    default: on_fail
 steps:
   - run:
-      name: Remove cloud run tag
+      name: Activate cloud run tag
       command: |
         source $BASH_ENV
         GCP_RUN_REGION="<< parameters.GCP_RUN_REGION >>"
@@ -35,4 +30,3 @@ steps:
         gcloud run services update-traffic $GCP_RUN_SERVICE_NAME \
             --region=$GCP_RUN_REGION \
             --to-tags=$GCP_RUN_REVISION_TAG=100
-      when: on_fail
