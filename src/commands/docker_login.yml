@@ -5,14 +5,16 @@ parameters:
   DOCKER_USERNAME:
     type: 'string'
     default: '_json_key_base64'
+    description: Used for docker login authentication
   DOCKER_PASSWORD:
     type: env_var_name
     description: |
-      The name of the variable containing the docker password.
+      The name of the variable containing the docker password for docker login authentication
     default: "DOCKER_PASSWORD"
   DOCKER_REGISTRY:
     type: 'string'
     default: europe-docker.pkg.dev
+    description: Which registry to authenticate towards
 
 steps:
   - run:

@@ -4,18 +4,31 @@ parameters:
   GCP_COMPUTE_ZONE:
     type: string
     default: "$GCP_COMPUTE_ZONE"
+    description: |
+      Which compute zone the GCP mig resides in
+      Can either be the name directly or a variable name which value is the name.
   GCP_MIG_NAME:
     type: string
     default: "$GCP_MIG_NAME"
+    description: |
+      Name of the GCP managed instance group
+      Can either be the name directly or a variable name which value is the name.
   GCP_MIG_MAX_SURGE:
     type: string
     default: "50%"
+    description: |
+      How many instances we can overshoot the max limit when performing an update
   GCP_MIG_MAX_UNAVAILABLE:
     type: string
     default: "50%"
+    description: |
+      How many instances we can replace at a time when performing an update.
   GCP_MIG_TEMPLATE_NAME:
     type: string
     default: "$GCP_MIG_TEMPLATE_NAME"
+    description: |
+      Name of the GCP template to deploy to the instance group
+      Can either be the name directly or a variable name which value is the name.
 
 steps:
   - run:

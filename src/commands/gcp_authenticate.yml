@@ -8,7 +8,8 @@ parameters:
     default: "$GCP_PROJECT_ID"
   GCP_SERVICE_KEY:
     type: env_var_name
-    description: The contents of GCP service account key file
+    description: |
+      The name of the variable containing GCP_SERVICE_KEY, used for authentication with gcloud cli
     default: "GCP_SERVICE_KEY"
 steps:
   - run:

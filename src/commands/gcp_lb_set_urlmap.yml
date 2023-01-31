@@ -5,15 +5,20 @@ parameters:
   GCP_SERVICE_KEY:
     type: env_var_name
     default: "GCP_SERVICE_KEY"
+    description: |
+      The name of the variable containing GCP_SERVICE_KEY, used for authentication with gcloud cli
   GCP_PROJECT_ID:
     type: string
     default: "$GCP_PROJECT_ID"
   GCP_URLMAP_SRC:
     type: string
+    description: |
+      A file path which contains a gcp urlmap
   GCP_URLMAP_DST:
     type: string
     default: ""
-    description: >
+    description: |
+      The GCP urlmap that will be updated.
       If the value is empty its defaulted to URL_MAP_SRC.
       Value is always stripped of of its last file name extension.
 steps:

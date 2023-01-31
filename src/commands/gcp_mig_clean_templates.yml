@@ -6,6 +6,8 @@ parameters:
   GCP_MIG_TEMPLATE_QUEUE_SIZE:
     type: integer
     default: 30
+    description: |
+      How many instance templates we will retain. The others will be discarded
   GCP_MIG_TEMPLATE_SIMPLE_PATTERN:
     type: string
     default: "$GCP_TEMPLATE_SIMPLE_PATTERN"

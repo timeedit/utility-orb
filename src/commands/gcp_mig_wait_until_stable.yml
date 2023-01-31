@@ -8,9 +8,15 @@ parameters:
   GCP_MIG_NAME:
     type: string
     default: "$GCP_MIG_NAME"
+    description: |
+      Name of the GCP managed instance group
+      Can either be the name directly or a variable name which value is the name.
   GCP_COMPUTE_ZONE:
     type: string
     default: "$GCP_COMPUTE_ZONE"
+    description: |
+      Which compute zone the GCP mig resides in
+      Can either be the name directly or a variable name which value is the name.
 steps:
   - run:
       name: Wait for MIG to stabilize
