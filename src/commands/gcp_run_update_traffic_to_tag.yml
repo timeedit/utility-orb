@@ -1,6 +1,5 @@
 description: |
-  Activates a tagged revision by moving the traffic to it
-  and removing the tag
+  Send traffic to tagged revision
 parameters:
   GCP_RUN_REGION:
     type: string
