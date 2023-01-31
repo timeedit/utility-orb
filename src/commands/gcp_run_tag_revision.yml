@@ -23,7 +23,7 @@ parameters:
       The name of the tag to be associated with the cloud run revision
 steps:
   - run:
-      name: Auth GCP
+      name: Tag cloud run revision
       command: |
         source $BASH_ENV
         GCP_RUN_REGION="<< parameters.GCP_RUN_REGION >>"
