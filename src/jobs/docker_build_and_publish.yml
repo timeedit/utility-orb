@@ -2,7 +2,7 @@ description: >
   Build and publish docker image
 docker:
   - image: << parameters.EXECUTOR_IMAGE >>
-resource_class: small
+resource_class: << parameters.RESOURCE_CLASS >>
 
 parameters:
   EXECUTOR_IMAGE:
@@ -31,6 +31,9 @@ parameters:
   DOCKER_REGISTRY:
     type: 'string'
     default: europe-docker.pkg.dev
+  RESOURCE_CLASS:
+    type: 'string'
+    default: small
 
 steps:
   - checkout
