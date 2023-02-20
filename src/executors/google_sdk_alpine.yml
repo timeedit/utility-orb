@@ -1,5 +1,0 @@
-description: >
-  Minimal image to be able to run gcloud commands
-docker:
-  - image: 'google/cloud-sdk:alpine'
-resource_class: small

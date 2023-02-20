@@ -9,6 +9,9 @@ parameters:
     type: 'string'
     description: Sets the executor image
     default: 'cimg/base:2023.01-22.04'
+  EXECUTOR_RESOURCE_CLASS:
+    type: 'string'
+    default: small
   STEPS_ENVIRONMENT:
     type: steps
     description: >
@@ -31,9 +34,6 @@ parameters:
   DOCKER_REGISTRY:
     type: 'string'
     default: europe-docker.pkg.dev
-  EXECUTOR_RESOURCE_CLASS:
-    type: 'string'
-    default: small
 
 steps:
   - checkout

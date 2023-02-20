@@ -3,9 +3,18 @@ description: |
   A tag is expected if you want
   to use the other cloud run jobs in this orb.
 
-executor: google_sdk_alpine
+docker:
+  - image: << parameters.EXECUTOR_IMAGE >>
+resource_class: << parameters.EXECUTOR_RESOURCE_CLASS >>
 
 parameters:
+  EXECUTOR_IMAGE:
+    type: 'string'
+    description: Sets the executor image
+    default: 'google/cloud-sdk:alpine'
+  EXECUTOR_RESOURCE_CLASS:
+    type: 'string'
+    default: small
   STEPS_ENVIRONMENT:
     type: steps
     description: |
