@@ -20,10 +20,10 @@ steps:
   - run:
       name: Docker login
       command: |
+        source $BASH_ENV
         USERNAME="<< parameters.DOCKER_USERNAME >>"
         PASSWORD="$<< parameters.DOCKER_PASSWORD >>"
         REGISTRY="<< parameters.DOCKER_REGISTRY >>"
-        source $BASH_ENV
         set -u
         docker login \
         "$REGISTRY" \
